@@ -16,7 +16,9 @@
     $fileNames = array_slice($fileAllNames, 2);//去掉 . ..两个目录
     foreach ($fileNames as $eachFile)
     {
-        $fileName = $dirName."/InAll/".$eachFile; //
+        $fileName = $dirName."/InAll/".$eachFile; 
+        //将文件名的后缀去掉保留全面部分作为数据表名
+        $eachFile = substr($eachFile, 0, -4);
     
         
     
@@ -52,7 +54,9 @@
     echo $sheetName;
     */
    //var_dump($config);
-   
+    $db = new db($config);
+    //echo $eachFile;
+    $db->newTable($eachFile);
     foreach ($objPHPExcel->getWorksheetIterator() as $sheet){ //循环SHEET
         foreach ($sheet->getRowIterator() as $row){           //循环每行
             if ($row->getRowIndex()>3)
@@ -66,9 +70,7 @@
                 $i++;
             }
             
-            $db = new db($config);
-            //新建一个与文件名同名的数据表
-            $db->newTable($eachFile);
+            
             
             $db->insertData($eachFile, $typeInData[1], $typeInData[2], $typeInData[3]);
             
